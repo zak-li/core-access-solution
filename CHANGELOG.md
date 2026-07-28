@@ -56,6 +56,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `deploy-app.sh` waits for the Kong public IP and syncs the Auth0 callbacks.
 - Removed dead code and unused packages from the bootstrap.
 
-[Unreleased]: https://github.com/zak-li/pam-governance/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/zak-li/pam-governance/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/zak-li/pam-governance/releases/tag/v1.0.0
+[Unreleased]: https://github.com/zak-li/zero-trust-pam/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/zak-li/zero-trust-pam/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/zak-li/zero-trust-pam/releases/tag/v1.0.0
