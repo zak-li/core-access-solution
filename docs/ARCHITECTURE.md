@@ -1,5 +1,7 @@
 # Architecture
 
+The **Core Access Suite** provides a unified architecture for both Identity Access Management (IAM) and Privileged Access Management (PAM) using a strict Zero Trust approach.
+
 ## Components
 
 Identity is provided by an `Auth0` tenant. It handles `OpenID Connect` and `OAuth2`, enforces multi-factor authentication, holds the `RBAC` roles, and runs a post-login Action that attaches role claims to the token. 
