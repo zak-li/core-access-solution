@@ -1,6 +1,6 @@
 # Core Access Suite
 
-This `Identity and Privileged Access Management (IAM/PAM)` solution is an enterprise-grade, cloud-native platform that secures all access under a strict `Zero Trust` model. It acts as a unified hub, bridging public identity federation (IAM) with highly restricted infrastructure access (PAM). It replaces static credentials with dynamic, short-lived secrets, ensuring every access request is bound to a verified identity, scoped to the least privilege, and fully audited.
+This `Identity and Privileged Access Management (IAM/PAM)` suite is an enterprise-grade, cloud-native platform that secures all access under a strict `Zero Trust` model. It acts as a unified hub, bridging public identity federation (IAM) with highly restricted infrastructure access (PAM). It replaces static credentials with dynamic, short-lived secrets, ensuring every access request is bound to a verified identity, scoped to the least privilege, and fully audited.
 
 ## Key Capabilities
 
