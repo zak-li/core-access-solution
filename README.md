@@ -2,9 +2,7 @@
 
 ## Core Access Solution
 
-> `Core Access Solution`: a unified, cloud-native Identity and Privileged Access Management (IAM/PAM) solution that centralizes enterprise secrets and enforces a strict Zero Trust security architecture. 
-
-The platform seamlessly integrates public identity federation with restricted privileged access management, enabling secure authentication, authorization, and privileged operations across cloud-native environments. 
+The solution seamlessly integrates public identity federation with restricted privileged access management, enabling secure authentication, authorization, and privileged operations across cloud-native environments. 
 
 To mitigate credential sprawl and unauthorized privilege escalation, it replaces static credentials with short-lived, on-demand secrets and enforces granular Role-Based Access Control (RBAC).
 
