@@ -1,10 +1,14 @@
+<br>
+
 ## Core Access Solution
 
-> `Core Access Solution` is a unified, cloud-native Identity and Privileged Access Management (IAM/PAM) solution that centralizes enterprise secrets and enforces a strict Zero Trust security architecture. 
+> `Core Access Solution`: a unified, cloud-native Identity and Privileged Access Management (IAM/PAM) solution that centralizes enterprise secrets and enforces a strict Zero Trust security architecture. 
 
 The platform seamlessly integrates public identity federation with restricted privileged access management, enabling secure authentication, authorization, and privileged operations across cloud-native environments. 
 
 To mitigate credential sprawl and unauthorized privilege escalation, it replaces static credentials with short-lived, on-demand secrets and enforces granular Role-Based Access Control (RBAC).
+
+<br>
 
 ## Table of Contents
 
@@ -12,34 +16,46 @@ To mitigate credential sprawl and unauthorized privilege escalation, it replaces
 - [Quick Start](#quick-start)
 - [Architecture](#architecture)
 - [Observability](#observability)
-- [Configuration](#configuration)
+- [Settings](#settings)
 - [License](#license)
 
 ## Features
 
-The production-grade infrastructure is provisioned through Infrastructure as Code ([`Terraform`](terraform/)) and deployed on Azure Kubernetes Service (AKS). 
+The solution is provisioned through Infrastructure as Code ([`Terraform`](terraform/)) and deployed on Azure Kubernetes Service (AKS). 
 
-**Identity Federation**
-Authentication is strictly handled through `Auth0` using OAuth 2.0, OpenID Connect (OIDC), Single Sign-On (SSO), and mandatory Multi-Factor Authentication (MFA). The configuration is fully automated via the [`terraform/modules/auth0`](terraform/modules/auth0) module.
+Past the foundational infrastructure, the core does more:
 
-**Dynamic Secrets**
-`HashiCorp Vault` issues short-lived credentials on demand and automatically rotates them to mitigate lateral movement. The Vault bootstrap process, including the dynamic secret engines, is defined in [`install.sh.tpl`](terraform/modules/compute/templates/install.sh.tpl).
-
-**Service Mesh Encryption**
-`Istio` secures all internal service-to-service communication with mutual TLS (mTLS), while a `Kong` API Gateway protects external endpoints. You can explore the user-facing Single Page Application deployment in the [`apps/web`](apps/web/) folder.
-
-**Break-Glass Escrow**
-`Azure Key Vault` provides a secure, automated escrow for Vault unseal keys and root tokens, ensuring safe recovery during outages. The escrow architecture is provisioned via the [`terraform/modules/key-vault`](terraform/modules/key-vault/) module.
-
-**Built with:** Azure Kubernetes Service (AKS), HashiCorp Vault 1.17.6, Istio, Kong API Gateway, Auth0, Splunk 9.3, Angular 17.3, Terraform 1.5+, Azure Key Vault.
+- **Identity Federation**: Authentication is strictly handled through `Auth0` using OAuth 2.0, OpenID Connect (OIDC), Single Sign-On (SSO), and mandatory Multi-Factor Authentication (MFA). The configuration is automated via [`terraform/modules/auth0`](terraform/modules/auth0).
+- **Dynamic Secrets**: `HashiCorp Vault` issues short-lived credentials on demand and automatically rotates them to mitigate lateral movement, bootstrapped via [`install.sh.tpl`](terraform/modules/compute/templates/install.sh.tpl).
+- **Service Mesh Encryption**: `Istio` secures all internal service-to-service communication with mutual TLS (mTLS) across the cluster, while a `Kong` API Gateway protects external endpoints routing to the [`apps/web`](apps/web/) Single Page Application.
+- **Break-Glass Escrow**: `Azure Key Vault` provides a secure, automated escrow for Vault unseal keys and root tokens, ensuring safe recovery during outages, provisioned via [`terraform/modules/key-vault`](terraform/modules/key-vault/).
 
 ## Quick Start
 
-You will need an authenticated `Azure CLI`, `Terraform` 1.5 or newer, and a configured `Auth0` Tenant.
+The infrastructure requires the following command-line tools:
+
+| Package | Version |
+|---|---|
+| `Azure CLI` | 2.50+ |
+| `Terraform` | 1.5+ |
+| `GNU Make` | 4.3+ |
+
+The following components enable the full capabilities of the solution:
+
+| Component | Role |
+|---|---|
+| `HashiCorp Vault` | Centralized secret management and dynamic credentials |
+| `Auth0` | Identity federation (OAuth 2.0 / OIDC / MFA) |
+| `Istio` | Zero Trust mutual TLS (mTLS) service mesh |
+| `Kong API Gateway` | External API protection and routing |
+| `Azure Kubernetes Service` | Scalable container orchestration |
+| `Splunk` | Forensic audit logging and security SIEM |
+| `Azure Key Vault` | Escrowed break-glass procedures |
+| `Angular` | User-facing SSO dashboard |
 
 ### Setup
 
-Clone the repository and prepare your environment variables based on the provided template in [`terraform/terraform.tfvars.example`](terraform/terraform.tfvars.example):
+Clone from source and prepare your environment variables:
 
 ```bash
 git clone https://github.com/zak-li/core-access-suite.git
@@ -47,7 +63,7 @@ cd core-access-suite
 cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 ```
 
-Export your Auth0 machine-to-machine credentials before provisioning:
+The infrastructure runs entirely in Azure. Export your Auth0 machine-to-machine credentials before provisioning:
 
 ```bash
 export AUTH0_DOMAIN="dev-xxxx.eu.auth0.com"
@@ -55,32 +71,28 @@ export AUTH0_CLIENT_ID="<m2m_client_id>"
 export AUTH0_CLIENT_SECRET="<m2m_secret>"
 ```
 
-Execute the infrastructure deployment command from the [`Makefile`](Makefile) to provision the base Azure infrastructure (VMs, AKS, Key Vault). 
+Execute the infrastructure deployment using the [`Makefile`](Makefile) to provision the base Azure infrastructure (VMs, AKS, Key Vault):
+
+```bash
+make deploy-infra
+```
 
 Follow this with the app deployment command, executed via [`scripts/deploy-app.sh`](scripts/deploy-app.sh), to install the Istio mesh, Kong, and the Angular application on Kubernetes:
 
 ```bash
-make deploy-infra
 make deploy-app
 ```
 
-Alternatively, provision everything in one go:
+### Lifecycle
+
+The [`Makefile`](Makefile) exposes commands to easily manage your environments without manually typing Terraform commands:
 
 ```bash
-make deploy
+make stop      # Suspend Azure compute resources to save costs
+make start     # Resume Azure compute resources
+make unseal    # Unseal Vault automatically using escrowed keys
+make destroy   # Tear down the entire infrastructure (irreversible)
 ```
-
-### Lifecycle Management
-
-The [`Makefile`](Makefile) exposes several commands to easily manage your environments without manually typing Terraform commands.
-
-You can use `make stop` and `make start` to suspend and resume Azure compute resources to save costs. 
-
-To unseal Vault automatically using the keys escrowed in Azure Key Vault, run `make unseal`, which executes the [`scripts/unseal.sh`](scripts/unseal.sh) script. 
-
-If you need to tear down the entire infrastructure, you can run `make destroy` (note that this is irreversible). 
-
-For developer tools, `make fmt` and `make validate` will format and validate your Terraform codebase.
 
 ## Architecture
 
@@ -94,20 +106,18 @@ For detailed request flows and visual diagrams, refer to the [`Architecture Docu
 
 Every privileged action, API call, and secret generation is captured. `Splunk` runs continuously on the core VM alongside Vault, ingesting the `Vault` audit log and the host logs in near real-time. This ensures total forensic observability and compliance with enterprise audit requirements.
 
-## Configuration
+## Settings
 
-The Terraform modules expect the following variables in your `terraform.tfvars` file or environment. 
+The Terraform modules expect the following variables in your `terraform.tfvars` file or environment. The complete reference is in [`terraform/terraform.tfvars.example`](terraform/terraform.tfvars.example).
 
-| Variable | Description |
-|---|---|
-| `AUTH0_DOMAIN` | Auth0 tenant domain (e.g., `dev-xxx.eu.auth0.com`) |
-| `AUTH0_CLIENT_ID` | Auth0 M2M application client ID |
-| `AUTH0_CLIENT_SECRET` | Auth0 M2M application client secret |
-| `location` | Azure region for deployment (default: `westeurope`) |
-| `environment` | Environment tag for resources (e.g., `dev`, `prod`) |
-
-*(See [`terraform/terraform.tfvars.example`](terraform/terraform.tfvars.example) for the complete reference).*
+| Variable | Default | Description |
+|---|---|---|
+| `AUTH0_DOMAIN` | | Auth0 tenant domain (e.g., `dev-xxx.eu.auth0.com`) |
+| `AUTH0_CLIENT_ID` | | Auth0 M2M application client ID |
+| `AUTH0_CLIENT_SECRET` | | Auth0 M2M application client secret |
+| `location` | `westeurope` | Azure region for deployment |
+| `environment` | `dev` | Environment tag for resources |
 
 ## License
 
-This project is released under the [`MIT License`](LICENSE).
+This project is licensed under the [`MIT License`](LICENSE).
