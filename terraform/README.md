@@ -1,6 +1,6 @@
 # Terraform
 
-Infrastructure as Code for the `Core Access Suite` platform, organized as a root module that composes one child module per concern.
+Infrastructure as Code for the `Core Access Solution` platform, organized as a root module that composes one child module per concern.
 
 ## Layout
 

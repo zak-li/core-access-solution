@@ -8,8 +8,6 @@ The platform seamlessly integrates public identity federation with restricted pr
 
 To mitigate credential sprawl and unauthorized privilege escalation, it replaces static credentials with short-lived, on-demand secrets and enforces granular Role-Based Access Control (RBAC).
 
-<br>
-
 ## Table of Contents
 
 - [Features](#features)
@@ -53,8 +51,8 @@ The following components enable the full capabilities of the solution:
 Clone from source and prepare your environment variables:
 
 ```bash
-git clone https://github.com/zak-li/core-access-suite.git
-cd core-access-suite
+git clone https://github.com/zak-li/core-access-solution.git
+cd core-access-solution
 cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 ```
 

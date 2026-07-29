@@ -1,6 +1,6 @@
 # Architecture
 
-The **Core Access Suite** provides a unified architecture for both Identity Access Management (IAM) and Privileged Access Management (PAM) using a strict Zero Trust approach.
+The **Core Access Solution** provides a unified architecture for both Identity Access Management (IAM) and Privileged Access Management (PAM) using a strict Zero Trust approach.
 
 ## Components
 
