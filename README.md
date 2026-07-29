@@ -21,14 +21,9 @@ To mitigate credential sprawl and unauthorized privilege escalation, it replaces
 
 ## Features
 
-The solution is provisioned through Infrastructure as Code ([`Terraform`](terraform/)) and deployed on Azure Kubernetes Service (AKS). 
+The core architecture bridges public identity federation with restricted infrastructure access. Authentication is enforced via `Auth0` (provisioned by [`terraform/modules/auth0`](terraform/modules/auth0/)) using strict MFA, OIDC, and SSO. Once authenticated, operators interact with `HashiCorp Vault` (configured via [`install.sh.tpl`](terraform/modules/compute/templates/install.sh.tpl)), which dynamically generates short-lived credentials and automatically rotates them. To ensure safe recovery, the system leverages `Azure Key Vault` ([`terraform/modules/key-vault`](terraform/modules/key-vault/)) as a secure, automated escrow for master unseal keys and root tokens.
 
-Past the foundational infrastructure, the core does more:
-
-- **Identity Federation**: Authentication is strictly handled through `Auth0` using OAuth 2.0, OpenID Connect (OIDC), Single Sign-On (SSO), and mandatory Multi-Factor Authentication (MFA). The configuration is automated via [`terraform/modules/auth0`](terraform/modules/auth0).
-- **Dynamic Secrets**: `HashiCorp Vault` issues short-lived credentials on demand and automatically rotates them to mitigate lateral movement, bootstrapped via [`install.sh.tpl`](terraform/modules/compute/templates/install.sh.tpl).
-- **Service Mesh Encryption**: `Istio` secures all internal service-to-service communication with mutual TLS (mTLS) across the cluster, while a `Kong` API Gateway protects external endpoints routing to the [`apps/web`](apps/web/) Single Page Application.
-- **Break-Glass Escrow**: `Azure Key Vault` provides a secure, automated escrow for Vault unseal keys and root tokens, ensuring safe recovery during outages, provisioned via [`terraform/modules/key-vault`](terraform/modules/key-vault/).
+The production-grade infrastructure is fully automated through Infrastructure as Code ([`Terraform`](terraform/)) and orchestrated on Azure Kubernetes Service (AKS). External API traffic is safely routed through a `Kong` gateway toward the [`apps/web`](apps/web/) Single Page Application. Internally, an `Istio` service mesh ([`kubernetes/`](kubernetes/)) encrypts all pod-to-pod communication with mutual TLS (mTLS), while all privileged actions are continuously audited and streamed to a centralized `Splunk` instance.
 
 ## Quick Start
 
