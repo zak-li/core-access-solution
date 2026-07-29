@@ -1,4 +1,4 @@
-# Privileged Access Management Solution
+# Core Access Suite
 
 This `Privileged Access Management (PAM)` solution is an enterprise grade, cloud native platform that secures privileged access under a strict `Zero Trust` model. It replaces static credentials with dynamic, short lived secrets, ensuring every access request is bound to a verified identity, scoped to the least privilege, and fully audited.
 
