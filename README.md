@@ -1,10 +1,8 @@
-<br>
+## Identity/Privileged Access Management (IAM/PAM) Solution
 
-## Core Access Solution
+The solution seamlessly integrates public `identity federation` with restricted `privileged access management`, enabling secure `authentication`, `authorization`, and privileged operations across `cloud-native` environments. 
 
-The solution seamlessly integrates public identity federation with restricted privileged access management, enabling secure authentication, authorization, and privileged operations across cloud-native environments. 
-
-To mitigate credential sprawl and unauthorized privilege escalation, it replaces static credentials with short-lived, on-demand secrets and enforces granular Role-Based Access Control (RBAC).
+To mitigate `credential sprawl` and unauthorized `privilege escalation`, it replaces `static credentials` with `short-lived`, `on-demand secrets` and enforces granular `Role-Based Access Control` (`RBAC`).
 
 ## Table of Contents
 
